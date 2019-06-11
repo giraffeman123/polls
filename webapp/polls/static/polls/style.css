@@ -1,7 +1,8 @@
-li a{
-    color: green;
-}
-
 body{
     background: white url("images/background.png");
 }
+
+/*ul.errorlist {
+    list-style-type: none;
+}
+*/

@@ -1,5 +1,6 @@
 {% load static %}
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -12,28 +13,37 @@
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1"
 </head>
 
 <body
-    <div class="container-fluid">
-    <h1>{{ question.question_text }}</h1>
-    <table class="table table-primary table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th> Answers </th>
-                <th> Votes </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for choice in question.choice_set.all %}
-            <tr>
-            <td> {{ choice.choice_text }} </td>
-            <td> {{ choice.votes }} vote{{ choice.votes|pluralize }} </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a class="btn btn-primary" href="{% url 'polls:detail' question.id %}"> Vote again? </a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="alert alert-info alert-dismissible fade show">
+            Username: <strong>{{ user.username }} </strong>
+        </div>
+        <div class="container-fluid">
+        <h1>{{ question.question_text }}</h1>
+        <table class="table table-primary table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th> Answers </th>
+                    <th> Votes </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for choice in question.choice_set.all %}
+                <tr>
+                <td> {{ choice.choice_text }} </td>
+                <td> {{ choice.votes }} vote{{ choice.votes|pluralize }} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a class="btn btn-primary" href="{% url 'polls:detail' question.id %}"> Vote again? </a>
+        </div>
+    {% else %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
+        </div>  
+    {% endif %}
 </body>

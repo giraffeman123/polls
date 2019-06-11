@@ -1,5 +1,6 @@
 {% load static %}
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -12,30 +13,40 @@
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1"
 </head>
 
 <body>
-    <div class="container-fluid">
-        <h1>{{ question.question_text }}</h1>
-        <!--<ul>
-            {% for choice in question.choice_set.all %}
-            <li>{{ choice.choice_text }}</li>
-            {% endfor %}
-        </ul>
-        -->
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        
-        <form action="{% url 'polls:vote' question.id %}" method="post">
-            <div class="form-group">
-            {% csrf_token %}
-            {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
-            <br>
-            {% endfor %}
-            </div>
-            <input type="submit" class="btn btn-info" name="vote">
-        </form>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            Username: <strong>{{ user.username }} </strong>
+        </div>
+        <div class="container-fluid">
+            <h1>{{ question.question_text }}</h1>
+            <!--<ul>
+                {% for choice in question.choice_set.all %}
+                <li>{{ choice.choice_text }}</li>
+                {% endfor %}
+            </ul>
+            -->
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            
+            <form action="{% url 'polls:vote' question.id %}" method="post">
+                <div class="form-group">
+                {% csrf_token %}
+                {% for choice in question.choice_set.all %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+                <br>
+                {% endfor %}
+                </div>
+                <input type="submit" class="btn btn-info" name="vote">
+            </form>
+        </div>
+    {% else %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
+        </div>  
+    {% endif %}
 </body>

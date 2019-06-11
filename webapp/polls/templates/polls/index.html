@@ -1,5 +1,6 @@
 {% load static %}
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -12,32 +13,42 @@
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1"
 </head>
 
 <body>
-    <div class="container-fluid">
-        <h1> Polls </h1>
-        <table class="table table-primary table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th> Question </th>
-                    <th> Date Published </th>
-                </tr>
-            </thead>
-            <tbody>
-            {% if latest_question_list %}
-                    {% for question in latest_question_list %}
+    {% if user.is_authenticated %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Welcome! {{ user.username }} </strong>. Thanks for log in.
+        </div>
+        <div class="container-fluid">
+            <h1> Polls </h1>
+            <table class="table table-primary table-striped">
+                <thead class="thead-dark">
                     <tr>
-                        <td><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
-                        </td>
-                        <td>{{ question.pub_date }}</td>
+                        <th> Question </th>
+                        <th> Date Published </th>
                     </tr>
-                    {% endfor %}
-            {% else %}
-                <p>No polls are available. </p>
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                {% if latest_question_list %}
+                        {% for question in latest_question_list %}
+                        <tr>
+                            <td><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+                            </td>
+                            <td>{{ question.pub_date }}</td>
+                        </tr>
+                        {% endfor %}
+                {% else %}
+                    <p>No polls are available. </p>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
+        </div>  
+    {% endif %}
 </body>

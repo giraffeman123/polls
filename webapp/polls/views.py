@@ -1,19 +1,34 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django.contrib.auth.views import login, AuthenticationForm
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic
-from django.contrib.auth.views import login, AuthenticationForm
+from django.views.generic import CreateView, ListView, DetailView
 from django.utils import timezone
 
-from .forms import QuestionForm
+from .forms import QuestionForm, ChoiceForm
 from .models import Question, Choice
 
+class ValidateFormMixin:
+    msg_obj_created = ''
+    render_template_error = ''
+    
+    def form_valid(self, form):
+        self.object = form.save()
+        messages.success(self.request, self.msg_obj_created)
+        return HttpResponseRedirect(self.get_success_url())
+        
+    def form_invalid(self, form):
+        if not form.is_valid():
+            messages.error(self.request, "Invalid form.")
+            return render(self.request, self.render_template_error, {"form":form})
+
 # loading index.html with generic view
-class IndexView(generic.ListView):
+class IndexView(ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
 
@@ -26,7 +41,7 @@ class IndexView(generic.ListView):
 
 
 # loading detail.html with generic view
-class DetailView(generic.DetailView):
+class DetailView(DetailView):
     model = Question
     template_name = "polls/detail.html"
 
@@ -38,20 +53,30 @@ class DetailView(generic.DetailView):
 
 
 # loading detail.html with generic view
-class ResultsView(generic.DetailView):
+class ResultsView(DetailView):
     model = Question
     template_name = "polls/results.html"
 
-
-class QuestionCreateView(generic.CreateView):
+class QuestionCreateView(ValidateFormMixin,CreateView):
+    msg_obj_created = 'Your Question was created successfully!'
+    render_template_error = 'polls/create_question.html'    
+    
     form_class = QuestionForm
     template_name = "polls/create_question.html"
-    success_url = "/polls"
+    success_url = "choice"
 
+class ChoiceCreateView(ValidateFormMixin,CreateView):
+    msg_obj_created = "Your Choice was created successfully!"
+    render_template_error = "polls/create_choice.html"
+    
+    form_class = ChoiceForm
+    template_name = "polls/create_choice.html"
+    success_url = "polls/"
+    
     def form_valid(self, form):
         self.object = form.save()
+        messages.success(self.request, "Your choice was created successfully!")
         return HttpResponseRedirect(self.get_success_url())
-
 
 def log_in(request):
     form = AuthenticationForm()
