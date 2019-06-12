@@ -13,19 +13,20 @@ from django.utils import timezone
 from .forms import QuestionForm, ChoiceForm
 from .models import Question, Choice
 
+
 class ValidateFormMixin:
-    msg_obj_created = ''
-    render_template_error = ''
-    
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.msg_obj_created)
-        return HttpResponseRedirect(self.get_success_url())
-        
+    # msg_obj_created = ""
+    render_template_error = ""
+
+    # def form_valid(self, form):
+    #    self.object = form.save()
+    #    messages.success(self.request, self.msg_obj_created)
+
     def form_invalid(self, form):
         if not form.is_valid():
             messages.error(self.request, "Invalid form.")
-            return render(self.request, self.render_template_error, {"form":form})
+            return render(self.request, self.render_template_error, {"form": form})
+
 
 # loading index.html with generic view
 class IndexView(ListView):
@@ -57,26 +58,26 @@ class ResultsView(DetailView):
     model = Question
     template_name = "polls/results.html"
 
-class QuestionCreateView(ValidateFormMixin,CreateView):
-    msg_obj_created = 'Your Question was created successfully!'
-    render_template_error = 'polls/create_question.html'    
-    
+
+class QuestionCreateView(ValidateFormMixin, CreateView):
+    render_template_error = "polls/create_question.html"
     form_class = QuestionForm
     template_name = "polls/create_question.html"
-    success_url = "choice"
 
-class ChoiceCreateView(ValidateFormMixin,CreateView):
-    msg_obj_created = "Your Choice was created successfully!"
+    def get_success_url(self):
+        messages.success(self.request, "Your Choice was created successfully!")
+        return reverse("polls:cr_choice")
+
+
+class ChoiceCreateView(ValidateFormMixin, CreateView):
     render_template_error = "polls/create_choice.html"
-    
     form_class = ChoiceForm
     template_name = "polls/create_choice.html"
-    success_url = "polls/"
-    
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, "Your choice was created successfully!")
-        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        messages.success(self.request, "Your Choice was created successfully!")
+        return reverse("polls:index")
+
 
 def log_in(request):
     form = AuthenticationForm()

@@ -24,9 +24,9 @@
             </div>
             <center>
                 <h1> Create a choice(s) </h1>
-                <form method="post">
+                <form action="" method="post">
                     {% csrf_token %}
-                    {{ from.as_p }}
+                    {{ form.as_p }}
                     <input class="btn btn-info" type="submit" value="Save">
                 </form>
             </center>

@@ -10,8 +10,9 @@ class QuestionForm(ModelForm):
     class Meta:
         model = Question
         fields = ["question_text", "pub_date"]
-        
+
+
 class ChoiceForm(ModelForm):
     class Meta:
         model = Choice
-        fields = ['choice_text','votes']
+        fields = ["question", "choice_text", "votes"]
