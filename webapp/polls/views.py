@@ -16,13 +16,10 @@ from .models import Question, Choice
 
 
 class ValidateFormMixin:
-    # msg_obj_created = ""
-    render_template_error = ""
-
     def form_invalid(self, form):
         if not form.is_valid():
             messages.error(self.request, "Invalid form.")
-            return render(self.request, self.render_template_error, {"form": form})
+            return super(ValidateFormMixin, self).form_invalid(form)
 
 
 # loading index.html with generic view
