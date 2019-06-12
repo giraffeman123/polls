@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.contrib.auth.views import login, AuthenticationForm
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
@@ -17,10 +18,6 @@ from .models import Question, Choice
 class ValidateFormMixin:
     # msg_obj_created = ""
     render_template_error = ""
-
-    # def form_valid(self, form):
-    #    self.object = form.save()
-    #    messages.success(self.request, self.msg_obj_created)
 
     def form_invalid(self, form):
         if not form.is_valid():
@@ -59,23 +56,23 @@ class ResultsView(DetailView):
     template_name = "polls/results.html"
 
 
-class QuestionCreateView(ValidateFormMixin, CreateView):
+class QuestionCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
     render_template_error = "polls/create_question.html"
     form_class = QuestionForm
     template_name = "polls/create_question.html"
+    success_message = "Your Choice was created successfully!"
 
     def get_success_url(self):
-        messages.success(self.request, "Your Choice was created successfully!")
         return reverse("polls:cr_choice")
 
 
-class ChoiceCreateView(ValidateFormMixin, CreateView):
+class ChoiceCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
     render_template_error = "polls/create_choice.html"
     form_class = ChoiceForm
     template_name = "polls/create_choice.html"
+    success_message = "Your Choice was created successfully!"
 
     def get_success_url(self):
-        messages.success(self.request, "Your Choice was created successfully!")
         return reverse("polls:index")
 
 
