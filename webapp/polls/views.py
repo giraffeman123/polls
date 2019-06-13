@@ -1,14 +1,15 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.contrib.auth.views import login, AuthenticationForm
+from django.contrib.auth.views import AuthenticationForm
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, FormView
 from django.utils import timezone
 
 from .forms import QuestionForm, ChoiceForm
@@ -60,7 +61,7 @@ class QuestionCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
     success_message = "Your Choice was created successfully!"
 
     def get_success_url(self):
-        return reverse("polls:cr_question")
+        return reverse("polls:cr_choice")
 
 
 class ChoiceCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
@@ -73,18 +74,16 @@ class ChoiceCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
         return reverse("polls:index")
 
 
-def log_in(request):
-    form = AuthenticationForm()
-    if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return HttpResponseRedirect(reverse("polls:index"))
-        else:
-            messages.error(request, "User doesn't exist.")
-            return render(request, "polls/login.html", {"form": form})
+class LoginView(ValidateFormMixin, FormView):
+    form_class = AuthenticationForm
+    template_name = "polls/login.html"
 
-    return render(request, "polls/login.html", {"form": form})
+    def get_success_url(self):
+        return reverse("polls:index")
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        return super(LoginView, self).form_valid(form)
 
 
 def vote(request, question_id):
