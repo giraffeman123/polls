@@ -60,7 +60,7 @@ class QuestionCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
     success_message = "Your Choice was created successfully!"
 
     def get_success_url(self):
-        return reverse("polls:cr_choice")
+        return reverse("polls:cr_question")
 
 
 class ChoiceCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
@@ -80,6 +80,9 @@ def log_in(request):
         if form.is_valid():
             login(request, form.get_user())
             return HttpResponseRedirect(reverse("polls:index"))
+        else:
+            messages.error(request, "User doesn't exist.")
+            return render(request, "polls/login.html", {"form": form})
 
     return render(request, "polls/login.html", {"form": form})
 
