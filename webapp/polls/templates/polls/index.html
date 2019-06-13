@@ -13,6 +13,9 @@
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <!-- Latest Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -27,7 +30,13 @@
                 <thead class="thead-dark">
                     <tr>
                         <th> Question </th>
+                        <th> Image </th>
                         <th> Date Published </th>
+                        <th>                                
+                            <a href="{% url 'polls:cr_question' %}" class="btn btn-primary a-btn-slide-text">
+                                <span><strong>Add Question <i class="fa fa-sticky-note" style="fill: black"></i></strong></span>            
+                            </a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,13 +45,38 @@
                         <tr>
                             <td><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
                             </td>
+                            {% if question.question_img %}
+                                <td><img src="{{ question.question_img.url }}" height="84" width="84"></td>                            
+                            {% else %}
+                                <td> No photo </td>
+                            {% endif %}
                             <td>{{ question.pub_date }}</td>
+                            <td>
+                                <a href="{% url 'polls:updt_question' question.id %}" class="btn btn-primary a-btn-slide-text">
+                                    <span><strong>Edit <i class="fa fa-edit" style="fill: black"></i></strong></span>            
+                                </a>                  
+                                <a href="{% url 'polls:del_question' question.id %}" class="btn btn-danger a-btn-slide-text">
+                                    <span><strong>Delete <i class="fa fa-trash" style="fill: black"></i></strong></span>            
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                 {% else %}
                     <p>No polls are available. </p>
                 {% endif %}
                 </tbody>
+                <tfoot class="table-dark">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td> Export to 
+                            <a href="{% url 'polls:cr_question' %}" class="btn btn-success a-btn-slide-text">
+                                <span><strong> .xls <i class="fa fa-file" style="fill: black"></i></strong></span>            
+                            </a>                        
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     {% else %}

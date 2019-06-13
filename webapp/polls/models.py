@@ -1,14 +1,13 @@
 from django.db import models
 from django.utils import timezone
 from datetime import datetime, timedelta
-
-# from PIL import Image
+from PIL import Image
 
 # Create your models here.
 class Question(models.Model):
 
     question_text = models.CharField("Question", max_length=200, unique=True)
-    #   question_img = models.ImageField(upload_to="images/")
+    question_img = models.ImageField("Img", upload_to="images/", null=True)
     pub_date = models.DateTimeField("Date Published")
 
     def __str__(self):

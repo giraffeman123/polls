@@ -23,14 +23,14 @@
                 Username: <strong>{{ user.username }} </strong>
             </div>
             <center>
-                <h1> Create a question </h1>
-                    <form action="" method="post" enctype="multipart/form-data">
+                <h1> Are you sure you want to delete "{{ question.question_text }}"? </h1>
+                    <form action="" method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <input class="btn btn-primary" type="submit" value="Save">
+                        <input class="btn btn-danger" type="submit" value="Confirm">
                         <a href="{% url 'polls:index' %}" >
                             <input class="btn btn-info" type="button" value="Cancel">
-                        </a>                           
+                        </a>                            
                     </form>
             </center>
             {% if messages %}

@@ -9,7 +9,14 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic import CreateView, ListView, DetailView, FormView
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+    ListView,
+    DetailView,
+    FormView,
+)
 from django.utils import timezone
 
 from .forms import QuestionForm, ChoiceForm
@@ -54,8 +61,24 @@ class ResultsView(DetailView):
     template_name = "polls/results.html"
 
 
+class QuestionDelete(DeleteView):
+    model = Question
+    template_name = "polls/delete_question.html"
+
+    def get_success_url(self):
+        return reverse("polls:index")
+
+
+class QuestionUpdate(ValidateFormMixin, SuccessMessageMixin, UpdateView):
+    model = Question
+    form_class = QuestionForm
+    template_name = "polls/update_question.html"
+
+    def get_success_url(self):
+        return reverse("polls:index")
+
+
 class QuestionCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
-    render_template_error = "polls/create_question.html"
     form_class = QuestionForm
     template_name = "polls/create_question.html"
     success_message = "Your Choice was created successfully!"
@@ -65,7 +88,6 @@ class QuestionCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
 
 
 class ChoiceCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
-    render_template_error = "polls/create_choice.html"
     form_class = ChoiceForm
     template_name = "polls/create_choice.html"
     success_message = "Your Choice was created successfully!"
