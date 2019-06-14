@@ -46,6 +46,17 @@ class IndexView(ListView):
         )
 
 
+class ChartView(ListView):
+    template_name = "polls/charts.html"
+    context_object_name = "questions_list"
+
+    def get_queryset(self):
+        """
+        Return all questions published
+        """
+        return Question.objects.all()
+
+
 # loading detail.html with generic view
 class DetailView(DetailView):
     model = Question
