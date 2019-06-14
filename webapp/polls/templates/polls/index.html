@@ -15,7 +15,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
     <!-- Latest Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    
 </head>
 
 <body>
@@ -71,8 +72,8 @@
                         <td></td>
                         <td></td>
                         <td> Export to 
-                            <a href="{% url 'polls:cr_question' %}" class="btn btn-success a-btn-slide-text">
-                                <span><strong> .xls <i class="fa fa-file" style="fill: black"></i></strong></span>            
+                            <a href="{% url 'polls:export_db_to_xslx' %}" class="btn btn-success a-btn-slide-text">
+                                <span><strong><i class="far fa-file-excel fa-2x" style="fill: black"></i></strong></span>            
                             </a>                        
                         </td>
                     </tr>

@@ -9,6 +9,9 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils.encoding import smart_str
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 from django.views.generic import (
     CreateView,
     UpdateView,
@@ -106,6 +109,33 @@ class LoginView(ValidateFormMixin, FormView):
     def form_valid(self, form):
         login(self.request, form.get_user())
         return super(LoginView, self).form_valid(form)
+
+
+def export_db_to_xslx(request):
+    wb = Workbook()
+    filename = "questions.xlsx"
+    sheet_obj = wb.active
+    sheet_obj.title = "Questions"
+
+    count = 2
+    sheet_obj["A1"] = "ID"
+    sheet_obj["B1"] = "Question"
+    sheet_obj["C1"] = "Choices"
+    all_questions = Question.objects.all()
+    for question in all_questions:
+        sheet_obj["A" + str(count)] = question.id
+        sheet_obj["B" + str(count)] = question.question_text
+        for choice in question.choice_set.all():
+            sheet_obj["C" + str(count)] = (
+                "[" + choice.choice_text + "-" + str(choice.votes) + "]"
+            )
+        count += 1
+
+    response = HttpResponse()
+    response["Content-Type"] = "application/vnd.ms-excel"
+    response["Content-Disposition"] = "attachment; filename=/%s" % smart_str(filename)
+    wb.save(response)
+    return response
 
 
 def vote(request, question_id):
