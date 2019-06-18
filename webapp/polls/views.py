@@ -54,30 +54,28 @@ class ChartView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ChartView, self).get_context_data(*args, **kwargs)
         qstn_list = Question.objects.all()
-        json = " 'questions' : ["
+        json = "["
 
         for qstn in qstn_list:
-            json += " 'question' : " + qstn.question_text + ", 'choiceList' : ["
+            json += '{ "question_text" : "' + qstn.question_text + '", "choiceList" : ['
             choices = qstn.choice_set.all()
             for choice in choices:
                 json += (
-                    "{ 'choice_text' : "
+                    '{ "choice_text" : "'
                     + choice.choice_text
-                    + ","
-                    + " 'votes' : "
+                    + '",'
+                    + ' "votes" : "'
                     + str(choice.votes)
-                    + "},"
+                    + '"},'
                 )
 
             if choices:
                 json = json[:-1]
-            json += "],"
+            json += "]},"
         json = json[:-1]
         json += "]"
 
         context["json"] = json
-
-        print(json)
         return context
 
 
