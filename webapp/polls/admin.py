@@ -18,8 +18,8 @@ class QuestionAdmin(admin.ModelAdmin):
     ]
     inlines = [ChoiceInline]
     list_display = (
-        "question_img",
         "question_text",
+        "question_img",
         "pub_date",
         "was_published_recently",
     )

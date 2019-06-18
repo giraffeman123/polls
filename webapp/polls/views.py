@@ -18,6 +18,7 @@ from django.views.generic import (
     DeleteView,
     ListView,
     DetailView,
+    TemplateView,
     FormView,
 )
 from django.utils import timezone
@@ -46,15 +47,38 @@ class IndexView(ListView):
         )
 
 
-class ChartView(ListView):
+class ChartView(TemplateView):
     template_name = "polls/charts.html"
-    context_object_name = "questions_list"
+    # context_object_name = "questions_list"
 
-    def get_queryset(self):
-        """
-        Return all questions published
-        """
-        return Question.objects.all()
+    def get_context_data(self, *args, **kwargs):
+        context = super(ChartView, self).get_context_data(*args, **kwargs)
+        qstn_list = Question.objects.all()
+        json = " 'questions' : ["
+
+        for qstn in qstn_list:
+            json += " 'question' : " + qstn.question_text + ", 'choiceList' : ["
+            choices = qstn.choice_set.all()
+            for choice in choices:
+                json += (
+                    "{ 'choice_text' : "
+                    + choice.choice_text
+                    + ","
+                    + " 'votes' : "
+                    + str(choice.votes)
+                    + "},"
+                )
+
+            if choices:
+                json = json[:-1]
+            json += "],"
+        json = json[:-1]
+        json += "]"
+
+        context["json"] = json
+
+        print(json)
+        return context
 
 
 # loading detail.html with generic view
