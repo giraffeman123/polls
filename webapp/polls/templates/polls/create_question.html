@@ -9,14 +9,14 @@
             </div>
             <center>
                 <h1> Create a question </h1>
-                    <form action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <input class="btn btn-primary" type="submit" value="Save">
-                        <a href="{% url 'polls:index' %}" >
-                            <input class="btn btn-info" type="button" value="Cancel">
-                        </a>                           
-                    </form>
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input class="btn btn-primary" type="submit" value="Save">
+                    <a href="{% url 'polls:index' %}" >
+                        <input class="btn btn-info" type="button" value="Cancel">
+                    </a>                           
+                </form>
             </center>
             {% if messages %}
                 <div class="container">
@@ -27,12 +27,12 @@
                             <strong> Error </strong> {{ message }}
                         </div>
                     {% endif %}
-                    {% if message.level == 'success' %}
-                        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-                          <div class="toast" style="position: absolute; top: 0; right: 0;">
+                    {% if message.tags == 'success' %}
+                        <!-- <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+                          <div class="toast" style="position: absolute; bottom: 0; right: 0;" data-delay="2000">
                             <div class="toast-header">
                               <!--<img src="..." class="rounded mr-2" alt="...">-->
-                              <strong class="mr-auto">Bootstrap</strong>
+                        <!--      <strong class="mr-auto">Info</strong>
                               <small>Right now</small>
                               <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -42,13 +42,12 @@
                               <strong> Success </strong> {{ message }}
                             </div>
                           </div>
-                        </div>
-                        <!--
+                        </div>-->
+                        
                         <div class="alert alert-success alert-dismissible fade show">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong> Success </strong> {{ message }}
                         </div>
-                        -->
                     {% endif %}                    
                 {% endfor %}
                 </div>
@@ -64,6 +63,11 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
         </div>    
-    {% endif %}    
+    {% endif %}   
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $(".toast").toast('show'); 
+        });
+    </script>
 </body>
 {% endblock %}

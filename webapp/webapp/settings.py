@@ -21,6 +21,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Server URL for browser to access the media files over Http
 MEDIA_URL = "/media/"
 
+# To send messages
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 

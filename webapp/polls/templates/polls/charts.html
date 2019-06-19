@@ -44,6 +44,9 @@
     <script type="text/javascript">
         $(document).ready(function(){
             
+            var qstn_json = $("#qstn_json").val();
+            var questions = JSON.parse(qstn_json);
+            
             var ctx = $('#myChart');
             var myChart = new Chart(ctx, {
                 type: 'bar',
@@ -61,9 +64,6 @@
                     }
                 }
             }); 
-            
-            var qstn_json = $("#qstn_json").val();
-            var questions = JSON.parse(qstn_json);
             
             $.each(questions, function(key,question){
                $("#select_qstn").append(new Option(question.question_text,question.question_text)); 

@@ -8,7 +8,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.encoding import smart_str
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -117,16 +117,22 @@ class QuestionUpdate(ValidateFormMixin, SuccessMessageMixin, UpdateView):
 class QuestionCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
     form_class = QuestionForm
     template_name = "polls/create_question.html"
-    success_message = "Your Choice was created successfully!"
+    success_message = "Your Question was created successfully!"
 
     def get_success_url(self):
-        return reverse("polls:cr_choice")
+        return reverse("polls:cr_choice", args=(self.object.id,))
 
 
 class ChoiceCreateView(ValidateFormMixin, SuccessMessageMixin, CreateView):
     form_class = ChoiceForm
     template_name = "polls/create_choice.html"
     success_message = "Your Choice was created successfully!"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ChoiceCreateView, self).get_context_data(*args, **kwargs)
+        qstn_created = Question.objects.get(pk=self.kwargs["pk"])
+        context["form"] = ChoiceForm(initial={"question": qstn_created})
+        return context
 
     def get_success_url(self):
         return reverse("polls:index")
