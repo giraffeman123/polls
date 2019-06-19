@@ -1,6 +1,5 @@
 {% extends 'polls/base.html' %}
 {% block contenido %}
-<body>
     {% if user.is_authenticated %}
         <div class="alert alert-info alert-dismissible fade show">
             Username: <strong>{{ user.username }} </strong>
@@ -31,5 +30,4 @@
             <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
         </div>  
     {% endif %}
-</body>
 {% endblock %}

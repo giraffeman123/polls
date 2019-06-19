@@ -1,6 +1,5 @@
 {% extends 'polls/base.html' %}
 {% block contenido %}
-<body>
     {% if user.is_authenticated %}
         {% if perms.polls.add_question %}
             <div class="alert alert-info alert-dismissible fade show">
@@ -18,24 +17,6 @@
                         </a>                            
                     </form>
             </center>
-            {% if messages %}
-                <div class="container">
-                {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                        <div class="alert alert-danger alert-dismissible fade show">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong> Error </strong> {{ message }}
-                        </div>
-                    {% endif %}
-                    {% if message.level == 'success' %}
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong> Success </strong> {{ message }}
-                        </div>
-                    {% endif %}                    
-                {% endfor %}
-                </div>
-            {% endif %}              
         {% else %}
             <div class="alert alert-warning alert-dismissible fade show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -48,5 +29,4 @@
             <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
         </div>    
     {% endif %}    
-</body>
 {% endblock %}

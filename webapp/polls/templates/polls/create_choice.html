@@ -1,6 +1,5 @@
 {% extends 'polls/base.html' %}
 {% block contenido %}
-<body>
     {% if user.is_authenticated %}
         {% if perms.polls.add_choice %}
             <div class="alert alert-info alert-dismissible fade show">
@@ -77,10 +76,4 @@
             <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
         </div>  
     {% endif %}
-    <script type="text/javascript">
-        $(document).ready(function(){
-           $(".toast").toast('show'); 
-        });
-    </script>    
-</body>
 {% endblock %}

@@ -97,9 +97,10 @@ class ResultsView(DetailView):
     template_name = "polls/results.html"
 
 
-class QuestionDelete(DeleteView):
+class QuestionDelete(SuccessMessageMixin, DeleteView):
     model = Question
     template_name = "polls/delete_question.html"
+    success_message = "Your Question was deleted successfully!"
 
     def get_success_url(self):
         return reverse("polls:index")
@@ -109,6 +110,7 @@ class QuestionUpdate(ValidateFormMixin, SuccessMessageMixin, UpdateView):
     model = Question
     form_class = QuestionForm
     template_name = "polls/update_question.html"
+    success_message = "Your Question was updated successfully!"
 
     def get_success_url(self):
         return reverse("polls:index")
