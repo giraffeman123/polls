@@ -1,0 +1,74 @@
+{% extends 'polls/base.html' %}
+{% block contenido %}
+    {% if user.is_authenticated %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Welcome {{ user.username }}! </strong> Thanks for log in.
+        </div>
+        <div class="container">
+            <h1> Polls </h1>
+            <table class="table table-primary table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th> Question </th>
+                        <th> Image </th>
+                        <th> Date Published </th>
+                        <th>                                
+                            <a href="{% url 'polls:cr_question' %}" class="btn btn-primary btn-block">
+                                <span><strong>Add Question <i class="fa fa-sticky-note" style="fill: black"></i></strong></span>            
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{% url 'polls:charts' %}" class="btn btn-warning btn-block">
+                                <span><strong> Charts <i class="fas fa-chart-bar" style="fill: black"></i></strong></span>            
+                            </a>                            
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if latest_question_list %}
+                        {% for question in latest_question_list %}
+                        <tr>
+                            <td><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+                            </td>
+                            {% if question.question_img %}
+                                <td><img src="{{ question.question_img.url }}" height="84" width="84"></td>                            
+                            {% else %}
+                                <td> No photo </td>
+                            {% endif %}
+                            <td>{{ question.pub_date }}</td>
+                            <td>
+                                <a href="{% url 'polls:updt_question' question.id %}" class="btn btn-primary btn-block">
+                                    <span><strong>Edit <i class="fa fa-edit" style="fill: black"></i></strong></span>            
+                                </a>                  
+                            </td>
+                            <td>
+                                <a href="{% url 'polls:del_question' question.id %}" class="btn btn-danger btn-block">
+                                    <span><strong>Delete <i class="fa fa-trash" style="fill: black"></i></strong></span>            
+                                </a>                                
+                            </td>
+                        </tr>
+                        {% endfor %}
+                {% else %}
+                    <p>No polls are available. </p>
+                {% endif %}
+                </tbody>
+                <tfoot class="table-dark">
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>
+                            <a href="{% url 'polls:export_db_to_xslx' %}" class="btn btn-success btn-block">
+                                <span><strong>Export to xlsx <i class="far fa-file-excel" style="fill: black"></i></strong></span>            
+                            </a>                        
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Welcome new user! </strong>. Please <a href="{% url 'polls:login' %}">log in. </a>
+        </div>  
+    {% endif %}
+{% endblock %}
